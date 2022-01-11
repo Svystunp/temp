@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Europe</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js" crossorigin=""></script>
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" crossorigin=""/>
+	<script type="text/javascript" src="js/leaflet.ajax.js"></script>
+	<link rel="stylesheet" href="plugins/Leaflet.awesome-markers/leaflet.awesome-markers.css">
+	<script src="plugins/Leaflet.awesome-markers/leaflet.awesome-markers.js"></script>
+
+    <style>
+		
+		@import url("fonts/TTNormsPro/stylesheet.css");
+		@import url("fonts/Muller/stylesheet.css");
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+			background: white;
+        }
+		#map{
+			width: 1925px;
+		}
+		#europe-map{
+			position: relative;
+			float: right;
+			width: 1285px;
+			height: 909px;
+			background: white;
+			z-index: 2;
+		}
+		#mapPane{
+			position: absolute;
+			top: 425px;
+			left: 250px;
+			width:510px;
+			z-index: 3;
+		}
+		#h1Div, #mapHeader, #mapListDiv {
+			padding-left: 52px;
+		}
+
+		.pin1 {
+			position: absolute;
+			content: '';
+			font-size: 25px;
+			margin-left: -5px;
+			margin-top: -5px;
+			color: #B4B4B4;
+		}
+		
+
+		.pin2 {
+			position: absolute;
+			content: '';
+			font-size: 25px;
+			margin-left: -5px;
+			margin-top: -5px;
+			color: #FFBB00;
+		}
+		.leaflet-popup-tip-container {
+			display: none !IMPORTANT;
+		} 
+	
+	h1{
+		font-family: 'TT Norms Pro';
+		font-weight: 800;
+		font-size: 50px;
+	}
+	h2{
+		font-family: 'TT Norms Pro';
+		font-weight: normal;
+		font-size: 25px;
+		margin-bottom: 0px;
+	}
+	h2:hover{
+		font-weight: bold;
+		color: #FFBB00;
+		 cursor: pointer;
+	}
+	li {
+        list-style: none;
+		font-family: 'Muller';
+		font-weight: normal;
+        font-size: 25px;
+		padding-bottom: 20px;
+	
+    }
+    li:hover{
+		font-weight: bold;
+		color: #FFBB00;
+		 cursor: pointer;
+		
+	}
+
+	ul {
+		  padding: 0;
+		  columns: 2;
+		  -webkit-columns: 2;
+		  -moz-columns: 2;
+	}
+	#vectorLine{
+		 position:absolute;
+		top:180px;
+		z-index: -1;
+	}
+	#mapListDiv{
+		 position:absolute;
+			top:280px;
+	}
+	.customTooltip {
+		border: none;
+		background: transparent;
+		font-family: 'Muller';
+		font-weight: normal;
+        font-size: 25px;
+		box-shadow: none;
+	}
+	.customTooltip:before{
+		border-bottom-color: transparent;
+	}
+	.nonSelectedPin{
+		text-align: center;
+		
+		width: 100px;
+		font-family: 'Muller';
+		font-weight: normal;
+        font-size: 25px;
+		color: black;
+	}
+	.nonSelectedPin > * {
+		margin: 0px;
+	}
+	
+	.nonSelectedPin:hover{
+		color: #FFBB00;
+		font-weight: bold;
+	}
+    </style>
+</head>
+<body>
+<div id = "map">
+
+	<div id="mapPane">
+		<div id='vectorLine'>
+			<svg width="188" height="139" viewBox="0 0 188 139" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M71.0875 14.4747C65.1078 19.6972 58.3304 8.61997 65.5439 5.35634C66.3997 4.57911 67.3538 3.91177 68.3723 3.36611C71.3938 1.76761 74.8346 1.2335 78.1905 0.849878C112.06 0.243307 146.527 0.972722 179.661 8.59426C181.733 9.36158 184.016 9.94029 185.7 11.4432C188.573 14.432 188.602 19.7972 185.17 22.387C183.806 23.507 182.17 24.2735 180.457 24.6764C124.869 30.7583 67.6782 29.8696 14.1073 47.9293C11.1108 48.9721 8.14181 50.4533 5.75049 52.4936C6.85266 53.2633 9.40096 54.6535 11.1133 55.0987C45.2936 62.6916 80.9279 62.7932 114.618 72.825C116.222 73.3939 117.881 73.9608 119.246 75.0127C120.896 76.1907 121.264 78.4161 120.852 80.2846C120.508 82.194 119.413 83.9525 117.857 85.1116C116.234 86.3312 114.366 87.183 112.471 87.8833C83.4579 97.8102 51.3602 99.0274 24.1397 113.897C22.7472 114.782 21.5398 115.933 20.4751 117.185C18.6964 119.138 18.9898 122.175 20.5187 124.179C22.4619 127.148 25.1708 129.502 28.042 131.543C30.5802 133.336 33.1195 135.135 35.7783 136.748C47.4417 143.416 21.1632 128.831 22.6808 127.586C22.3375 127.201 21.9944 126.816 21.6513 126.43C21.3644 126.081 21.0772 125.732 20.7903 125.382C20.5597 125.069 20.3287 124.756 20.0981 124.443C19.605 123.751 19.2134 122.987 18.9514 122.179C18.6676 121.306 18.5763 120.364 18.7418 119.459C19.1101 117.279 20.8357 115.704 22.3818 114.281C50.6287 96.3082 86.3227 96.9441 116.227 83.0899C117.772 81.9104 119.117 79.1616 117.855 77.4206C116.683 76.3968 115.084 76.0988 113.66 75.5899C79.7229 66.2465 44.0214 67.0198 9.6769 59.9478C7.59975 59.2055 5.45236 58.5207 3.61467 57.2649C1.35386 55.8817 -0.131208 52.8194 1.18322 50.311C2.52752 47.6074 5.37896 46.0981 7.89218 44.6677C62.1202 23.1779 122.543 22.7732 179.08 15.4191C177.912 16.3149 179.596 17.644 179.551 18.7326C147.767 11.8132 114.844 11.3183 82.4077 11.1586C80.1054 11.2083 77.8088 11.451 75.5483 11.891C73.6888 11.9497 72.3622 13.2977 71.0875 14.4747Z" fill="#FFBB00"/>
+			</svg>
+		</div>
+		<div id="mapHeader" onclick="back()"><h2><i class='fas fa-arrow-left'></i>ЕВРОПА</h2></div>
+		<div id="h1Div"><h1>ВЫБЕРИ ЛОКАЦИЮ</h1>
+		</div>
+
+		<div id="mapListDiv">
+			<ul id="mapList"></ul>
+		</div>
+	</div>
+    <div id="europe-map"></div>
+
+</div>
+
+    <script>
+
+
+
+
+
+       
+
+        // standard leaflet map setup
+	   var map = L.map('europe-map', {
+			center: [53.09402405506328, 13.491210937500002],
+			zoom: 4,
+			scrollWheelZoom: false,
+			zoomControl: false
+		});
+		
+	
+		var country = '';
+		
+		
+		var myIcon = L.divIcon({ 
+			html: '<i class="fas fa-map-marker-alt"></i>',
+			iconSize: new L.Point(25, 25), 
+			className: 'pin1'
+		});
+
+
+		var citiesHolder = L.layerGroup();
+		
+		function back(){
+			citiesHolder.clearLayers();
+			map.removeLayer(citiesHolder);
+			europe.setStyle({
+				fillOpacity:0,
+				color: '#B4B4B4',
+				weight: 1
+			});
+			map.flyTo([53.09402405506328, 13.491210937500002], 4);
+			document.getElementById('mapHeader').innerHTML = ("<h2><i class='fas fa-arrow-left'></i>ЕВРОПА</h2>");
+			document.getElementById('mapList').innerHTML = ("");
+			europe.eachLayer(function(layer) {
+				if (layer.feature.properties.is == true){
+				var ul = document.getElementById('mapList');
+				var li = document.createElement('li');
+				//li.appendChild(document.createTextNode(layer.feature.properties.NAME));
+				li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = selectCountry('"+layer.feature.properties['NAME']+"')><i class='fas fa-map-marker-alt'></i>"+layer.feature.properties.NAME_RU+"</span>");
+				ul.appendChild(li);
+			
+			}});
+		
+		}
+		
+		function highlightFeature(e) {
+			var layer = e.target;
+			if (layer.feature.properties.is == true && map.hasLayer(citiesHolder)== false){
+			layer.setStyle({
+				fillOpacity:0,
+				color: '#FFBB00',
+				weight: 3
+			});	
+			}
+		}
+		function resetHighlight(e) {
+			var layer = e.target;
+			if (layer.feature.properties.is == true && map.hasLayer(citiesHolder)== false){
+			layer.setStyle({
+				fillOpacity:0,
+				color: '#B4B4B4',
+				weight: 1
+			});
+			}
+		}			
+		function getDefaultIcon() {
+		  return new L.divIcon({ 
+			html: '<i class="fas fa-map-marker-alt"></i>',
+			iconSize: new L.Point(25, 25), 
+			className: 'pin1'
+		});
+		}
+		function getHighlightIcon(e) {
+	
+		  return new L.divIcon({ 
+			html: '<i class="fas fa-map-marker-alt"></i>',
+			iconSize: new L.Point(25, 25), 
+			className: 'pin2'
+		});
+		highlight = layer;
+		}
+		
+		var highlight = null;
+		function removeHighlight() {
+		  // Check for highlight
+		  if (highlight !== null) {
+			// Set default icon
+			highlight.setIcon(getDefaultIcon());
+			// Unset highlight
+			highlight = null;
+		  }
+		}
+
+		var europe = new L.GeoJSON.AJAX("europe.geojson", 
+		{onEachFeature: function(feature, layer){
+			var ul = document.getElementById('mapList');
+			if (layer.feature.properties.is == true){
+			var li = document.createElement('li');
+			li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = selectCountry('"+feature.properties['NAME']+"')><i class='fas fa-map-marker-alt'></i>"+layer.feature.properties.NAME_RU+"</span>");
+			ul.appendChild(li);
+			}
+			layer.on({click: function (e) {
+			if (layer.feature.properties.is == true){
+			country = feature.properties['NAME'];
+
+		
+			//resetStyle;
+			europe.setStyle({
+				fillOpacity:0,
+				color: '#B4B4B4',
+				weight: 1
+			});
+			highlightFeature(e);
+			citiesHolder.clearLayers();
+			document.getElementById('mapHeader').innerHTML = ("<h2><i class='fas fa-arrow-left'></i>"+feature.properties['NAME_RU']+"<h2>");
+			document.getElementById('mapList').innerHTML= "";
+			citiesHolder.addTo(map);
+			
+				
+				feature.properties.bounds_calculated = layer.getBounds();
+				map.fitBounds(feature.properties.bounds_calculated);
+				addCities(country);
+								
+							}}, mouseover: highlightFeature, mouseout: resetHighlight});
+						},
+						style: {
+							fillOpacity:0,
+							color: '#B4B4B4',
+							weight: 1
+						}
+		}).addTo(map);
+
+					
+				addCities = function(country){
+					var ul = document.getElementById('mapList');
+					ul.innerHTML = '';
+					function myFilter(feature) {
+						if (feature.properties.COUNTRY === country) {
+							return true;
+						}
+					}
+					var cities = new L.GeoJSON.AJAX("cities.geojson", {onEachFeature: function(feature, layer){
+					
+						
+						
+						if (layer.feature.properties.COUNTRY == country){
+						
+						var li = document.createElement('li');
+						console.log(layer.feature.properties.WIKI);
+						li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = (window.open('"+layer.feature.properties.WIKI+"','_blank'))><i class='fas fa-map-marker-alt'></i>"+layer.feature.properties.NAME_RU+"</span>");
+						ul.appendChild(li);
+						}
+						layer.on({click: function (e) {
+							
+							window.open(layer.feature.properties.WIKI);
+							
+						}	
+						})
+						}, pointToLayer: function(feature, latlng){
+							
+							return L.marker(latlng, {icon: L.divIcon({ 
+								html: '<div id= "'+feature.properties['NAME']+'" class = "nonSelectedPin"><i class="fas fa-map-marker-alt"></i><p>'+feature.properties['NAME_RU']+'</p></div>',
+								iconSize: new L.Point(100, 25), 
+								className: 'pin1'
+							})
+							});
+						
+					
+							},
+							filter: myFilter
+						});
+								cities.addTo(citiesHolder);
+						}
+
+		selectCity = function(name){
+			citiesHolder.eachLayer(function(layer){
+				if (layer.feature.properties.NAME == name){
+					layer.setIcon(getHighlightIcon());
+				}
+			});
+		}
+		selectCountry = function(name, nameRu){
+			europe.setStyle({
+				fillOpacity:0,
+				color: '#B4B4B4',
+				weight: 1
+			});
+			
+			citiesHolder.clearLayers();
+			citiesHolder.addTo(map);
+			europe.eachLayer(function(layer) {
+				if (layer.feature.properties.NAME == name){
+						layer.setStyle({
+						fillOpacity:0,
+						color: '#FFBB00',
+						weight: 3
+					});
+					var bounds = layer.getBounds();
+					map.fitBounds(bounds);
+					addCities(name);
+					document.getElementById('mapHeader').innerHTML = ("<h2><i class='fas fa-arrow-left'></i>"+layer.feature.properties.NAME_RU+"<h2>");
+			}});
+			
+			
+		}
+
+  </script>
+</body>
+</html>
