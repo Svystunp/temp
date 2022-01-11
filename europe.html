@@ -17,6 +17,7 @@
 		
 		@import url("fonts/TTNormsPro/stylesheet.css");
 		@import url("fonts/Muller/stylesheet.css");
+		@import url("fonts/icon/style.css");
         body {
             padding: 0;
             margin: 0;
@@ -93,8 +94,9 @@
 		font-weight: normal;
         font-size: 25px;
 		padding-bottom: 20px;
-	
-    }
+	}
+
+  
     li:hover{
 		font-weight: bold;
 		color: #FFBB00;
@@ -213,7 +215,7 @@
 				var ul = document.getElementById('mapList');
 				var li = document.createElement('li');
 				//li.appendChild(document.createTextNode(layer.feature.properties.NAME));
-				li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = selectCountry('"+layer.feature.properties['NAME']+"')><i class='fas fa-map-marker-alt'></i>"+layer.feature.properties.NAME_RU+"</span>");
+				li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = selectCountry('"+layer.feature.properties['NAME']+"')><i class='icon-map-pin'></i>"+layer.feature.properties.NAME_RU+"</span>");
 				ul.appendChild(li);
 			
 			}});
@@ -273,7 +275,7 @@
 			var ul = document.getElementById('mapList');
 			if (layer.feature.properties.is == true){
 			var li = document.createElement('li');
-			li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = selectCountry('"+feature.properties['NAME']+"')><i class='fas fa-map-marker-alt'></i>"+layer.feature.properties.NAME_RU+"</span>");
+			li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = selectCountry('"+feature.properties['NAME']+"')><i class='icon-map-pin'></i>"+layer.feature.properties.NAME_RU+"</span>");
 			ul.appendChild(li);
 			}
 			layer.on({click: function (e) {
@@ -324,7 +326,7 @@
 						
 						var li = document.createElement('li');
 						console.log(layer.feature.properties.WIKI);
-						li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = (window.open('"+layer.feature.properties.WIKI+"','_blank'))><i class='fas fa-map-marker-alt'></i>"+layer.feature.properties.NAME_RU+"</span>");
+						li.innerHTML =("<span id = '"+layer.feature.properties.NAME+"' onclick = (window.open('"+layer.feature.properties.WIKI+"','_blank'))><i class='icon-map-pin'></i>"+layer.feature.properties.NAME_RU+"</span>");
 						ul.appendChild(li);
 						}
 						layer.on({click: function (e) {
@@ -336,7 +338,7 @@
 						}, pointToLayer: function(feature, latlng){
 							
 							return L.marker(latlng, {icon: L.divIcon({ 
-								html: '<div id= "'+feature.properties['NAME']+'" class = "nonSelectedPin"><i class="fas fa-map-marker-alt"></i><p>'+feature.properties['NAME_RU']+'</p></div>',
+								html: '<div id= "'+feature.properties['NAME']+'" class = "nonSelectedPin"><i class="icon-map-pin"></i><p>'+feature.properties['NAME_RU']+'</p></div>',
 								iconSize: new L.Point(100, 25), 
 								className: 'pin1'
 							})
